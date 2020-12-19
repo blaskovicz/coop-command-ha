@@ -34,7 +34,7 @@ async def async_setup(hass, config):
     hass.data[CONF_HOST] = config[DOMAIN].get(CONF_HOST)
 
     # healthcheck
-    API(hass.data[CONF_HOST]).hardware_info()
+    await API(hass.data[CONF_HOST]).hardware_info()
 
     # let other components that use the API load
     for component in COOP_COMMAND_COMPONENTS:

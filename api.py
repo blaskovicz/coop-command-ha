@@ -1,5 +1,5 @@
 # https://github.com/blaskovicz/coop-command/blob/master/coop-command/coop-command.ino#L520
-import requests
+
 import logging
 import aiohttp
 import asyncio
@@ -13,9 +13,12 @@ class APILight:
             name = path
         self.id = path
         self._base_url = base_url
-        self.r = 0.0
-        self.g = 0.0
-        self.b = 0.0
+
+        # default to red
+        self.r = 255.0
+        self.g = 14.0
+        self.b = 14.0
+
         self.on = False
         self._path = path
         self.name = name
@@ -55,11 +58,25 @@ class API:
     def __init__(self, host):
         self._base_url = f'http://{host}/api'
 
-    def hardware_info(self):
-        res = requests.get(f'{self._base_url}/_info')
-        if res.status_code != 200:
-            raise Exception(f'Hardware info fetch failure at {self._base_url}/_info: {res.status_code} {res.text}')
-        return res.json()
+    async def sensor_info(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f'{self._base_url}/dht') as res:
+                if res.status != 200:
+                    text = await res.text()
+                    raise Exception(f'Sensor info fetch failure at {self._base_url}/dht: {res.status} {text}')
+                data = await res.json()
+                _LOGGER.info(f'sensor info is now {data}')
+                return data
+
+    async def hardware_info(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f'{self._base_url}/_info') as res:
+                if res.status != 200:
+                    text = await res.text()
+                    raise Exception(f'Hardware info fetch failure at {self._base_url}/_info: {res.status} {text}')
+                data = await res.json()
+                _LOGGER.info(f'hardware info is now {data}')
+                return data
 
     async def door_info(self):
         _LOGGER.info(f'fetching door data')

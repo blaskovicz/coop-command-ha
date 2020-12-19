@@ -3,7 +3,7 @@ import logging
 import async_timeout
 from homeassistant.helpers.entity import async_generate_entity_id
 from datetime import timedelta
-from homeassistant.components.cover import (CoverEntity, DEVICE_CLASS_DOOR, SUPPORT_CLOSE, SUPPORT_OPEN, ENTITY_ID_FORMAT)
+from homeassistant.components.cover import (CoverEntity, DEVICE_CLASS_GARAGE, SUPPORT_CLOSE, SUPPORT_OPEN, ENTITY_ID_FORMAT)
 from homeassistant.const import CONF_HOST
 import homeassistant.util.color as color_util
 from .const import DOMAIN
@@ -62,21 +62,22 @@ class CoopCommandDoor(CoordinatorEntity, CoverEntity):
         self._door_id = door_id
         self._api = api
 
-    @ property
+    @property
     def name(self):
         """Return the display name of this door."""
         return self._door_id
 
-    @ property
+    @property
     def supported_features(self):
         """Flag supported features."""
         return SUPPORT_OPEN | SUPPORT_CLOSE
 
-    @ property
+    @property
     def device_class(self):
         """What type of device is this."""
-        return DEVICE_CLASS_DOOR
+        return DEVICE_CLASS_GARAGE
 
+    @property
     def is_closed(self):
         """If the door is closed or not."""
         val = self.coordinator.data[self._door_id]
