@@ -1,7 +1,6 @@
 """Platform for cover integration."""
 import logging
 import async_timeout
-from homeassistant.helpers.entity import async_generate_entity_id
 from datetime import timedelta
 from homeassistant.components.cover import (CoverEntity, DEVICE_CLASS_GARAGE, SUPPORT_CLOSE, SUPPORT_OPEN, ENTITY_ID_FORMAT)
 from homeassistant.const import CONF_HOST

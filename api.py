@@ -27,7 +27,7 @@ class APILight:
         on = "true" if self.on else "false"
         data = {'r': self.r, 'g': self.g, 'b': self.b, 'on': on}
 
-        _LOGGER.info(f'saving light {self.name} to {data}')
+        _LOGGER.debug(f'saving light {self.name} to {data}')
 
         async with aiohttp.ClientSession() as session:
             async with session.put(f'{self._base_url}/{self._path}', data=data) as res:
@@ -37,7 +37,7 @@ class APILight:
                 return await res.json()
 
     async def update(self):
-        _LOGGER.info(f'updating light {self.name} data')
+        _LOGGER.debug(f'updating light {self.name} data')
 
         async with aiohttp.ClientSession() as session:
             async with session.get(f'{self._base_url}/{self._path}') as res:
@@ -47,7 +47,8 @@ class APILight:
 
                 data = await res.json()
 
-                _LOGGER.info(f'light {self.name} data is now {data}')
+                _LOGGER.debug(f'light {self.name} data is now {data}')
+
                 self.r = float(data['r'])
                 self.g = float(data['g'])
                 self.b = float(data['b'])
@@ -59,27 +60,31 @@ class API:
         self._base_url = f'http://{host}/api'
 
     async def sensor_info(self):
+        _LOGGER.debug('fetching sensor info')
+
         async with aiohttp.ClientSession() as session:
             async with session.get(f'{self._base_url}/dht') as res:
                 if res.status != 200:
                     text = await res.text()
                     raise Exception(f'Sensor info fetch failure at {self._base_url}/dht: {res.status} {text}')
                 data = await res.json()
-                _LOGGER.info(f'sensor info is now {data}')
+                _LOGGER.debug(f'sensor info is now {data}')
                 return data
 
     async def hardware_info(self):
+        _LOGGER.debug('fetching hardware info')
+
         async with aiohttp.ClientSession() as session:
             async with session.get(f'{self._base_url}/_info') as res:
                 if res.status != 200:
                     text = await res.text()
                     raise Exception(f'Hardware info fetch failure at {self._base_url}/_info: {res.status} {text}')
                 data = await res.json()
-                _LOGGER.info(f'hardware info is now {data}')
+                _LOGGER.debug(f'hardware info is now {data}')
                 return data
 
     async def door_info(self):
-        _LOGGER.info(f'fetching door data')
+        _LOGGER.debug('fetching door data')
 
         async with aiohttp.ClientSession() as session:
             async with session.get(f'{self._base_url}/doors') as res:
@@ -87,7 +92,7 @@ class API:
                     text = await res.text()
                     raise Exception(f'Doors fetch failure at {self._base_url}/doors: {res.status} {text}')
                 data = await res.json()
-                _LOGGER.info(f'door data is now {data}')
+                _LOGGER.debug(f'door data is now {data}')
                 return data
 
     # TODO make api door class and use like api light
@@ -97,7 +102,7 @@ class API:
             val = state[door_id]
             data[door_id] = "true" if val else "false"
 
-        _LOGGER.info(f'saving doors data {data}')
+        _LOGGER.debug(f'saving doors data {data}')
         async with aiohttp.ClientSession() as session:
             async with session.put(f'{self._base_url}/doors', data=data) as res:
                 if res.status != 200:

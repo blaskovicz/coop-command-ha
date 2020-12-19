@@ -13,7 +13,7 @@ from .const import DOMAIN
 COOP_COMMAND_COMPONENTS = [
     'light',
     'cover',
-    # 'sensor', # TODO
+    'sensor',
 ]
 
 _LOGGER = logging.getLogger(__name__)
