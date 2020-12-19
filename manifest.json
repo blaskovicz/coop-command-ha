@@ -1,0 +1,16 @@
+{
+  "domain": "coop_command",
+  "name": "Coop Command",
+  "documentation": "https://github.com/blaskovicz/coop-command-ha",
+  "requirements": [
+    "requests==2.25",
+    "aiohttp==3.7.3"
+  ],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@blaskovicz"
+  ]
+}
